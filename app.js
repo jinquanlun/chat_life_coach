@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static('.'));
 
 // API配置
-const API_KEY = 'fa52e00b-af7f-4efa-9444-2fa932b9e4a0';
+const API_KEY = process.env.API_KEY || 'fa52e00b-af7f-4efa-9444-2fa932b9e4a0';
 const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
 
 // 系统提示词设置
@@ -108,6 +108,7 @@ app.post('/chat', async (req, res) => {
 });
 
 // 启动服务器
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`服务器运行在 http://localhost:${port}`);
 });
