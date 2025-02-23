@@ -1,0 +1,18 @@
+{
+  "name": "test_3",
+  "version": "1.0.0",
+  "description": "## 项目简介 这是一个基于火山方舟DeepSeek R1 API开发的个人成长对话网站。通过与AI进行实时对话，用户可以获得生活建议和个人成长指导。",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2"
+  }
+}

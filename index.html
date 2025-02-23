@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Life Coach - 个人成长对话</title>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 页眉区域 -->
+    <header class="header">
+        <h1>AI Life Coach</h1>
+        <p class="subtitle">你的个人成长伙伴</p>
+        <nav class="nav">
+            <ul>
+                <li><a href="#" class="active">对话</a></li>
+                <li><a href="#">使用说明</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 主要对话区域 -->
+    <main class="chat-container">
+        <!-- 消息展示区 -->
+        <section class="messages" id="messageArea">
+            <!-- 欢迎消息 -->
+            <div class="message ai-message">
+                <div class="message-content">
+                    <p>你好！我是你的AI Life Coach。让我们开始对话，探讨你的个人成长之路吧！</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 输入区域 -->
+        <section class="input-area">
+            <form id="chatForm" class="chat-form">
+                <textarea 
+                    id="userInput" 
+                    placeholder="输入你想说的话..."
+                    rows="3"
+                    required
+                ></textarea>
+                <button type="submit" class="send-button">
+                    发送
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <!-- 页脚区域 -->
+    <footer class="footer">
+        <p>© 2024 AI Life Coach. 基于火山方舟DeepSeek R1 API开发</p>
+        <p><small>注意：这是一个AI助手，仅供参考。如有重要决定，请咨询专业人士。</small></p>
+    </footer>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="public/js/chat.js"></script>
+</body>
+</html>
