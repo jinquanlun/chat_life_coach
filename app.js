@@ -4,7 +4,6 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 
 const app = express();
-const port = 3000;
 
 // 启用CORS和JSON解析
 app.use(cors());
@@ -110,5 +109,5 @@ app.post('/chat', async (req, res) => {
 // 启动服务器
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`服务器运行在 http://localhost:${port}`);
+    console.log(`服务器运行在端口 ${port}`);
 });

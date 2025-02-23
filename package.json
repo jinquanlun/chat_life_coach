@@ -1,6 +1,9 @@
 {
-  "name": "test_3",
-  "version": "1.0.0",
+  "name": "ai_life_coach",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "description": "## 项目简介 这是一个基于火山方舟DeepSeek R1 API开发的个人成长对话网站。通过与AI进行实时对话，用户可以获得生活建议和个人成长指导。",
   "type": "module",
   "main": "app.js",
