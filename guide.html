@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用指南 - AI Life Coach</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bg-gradient-overlay {
+            background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.05), transparent, rgba(244, 63, 94, 0.05));
+            filter: blur(24px);
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav a {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #6366f1, #f43f5e);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav a:hover::after,
+        .nav a.active::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .guide-section {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .guide-section.animated {
+            animation: fade-in 0.6s forwards;
+        }
+
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-[#030303] text-white min-h-screen">
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 bg-gradient-overlay pointer-events-none"></div>
+
+    <!-- 页眉区域 -->
+    <header class="header fixed top-0 w-full z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-brain text-2xl text-white/60"></i>
+                    <h1 class="text-xl font-bold">AI Life Coach</h1>
+                </div>
+                <nav class="nav">
+                    <ul class="flex gap-6">
+                        <li><a href="home.html" class="text-white/80 hover:text-white transition-colors">首页</a></li>
+                        <li><a href="index.html" class="text-white/80 hover:text-white transition-colors">对话</a></li>
+                        <li><a href="guide.html" class="text-white active">使用指南</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="container mx-auto px-4 pt-24 pb-16">
+        <!-- 欢迎部分 -->
+        <section class="guide-section mb-16 text-center">
+            <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-indigo-500 to-pink-500 text-transparent bg-clip-text">AI Life Coach 使用指南</h1>
+            <p class="text-xl text-white/70 max-w-2xl mx-auto">你的个人成长伙伴，通过智能对话帮助你探索自我、解决困惑、实现成长。</p>
+        </section>
+
+        <!-- 快速开始 -->
+        <section class="guide-section mb-16">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i class="fas fa-rocket text-indigo-400"></i>
+                快速开始
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="feature-card bg-white/5 p-6 rounded-xl border border-white/10">
+                    <div class="text-2xl mb-4 text-indigo-400">01</div>
+                    <h3 class="font-medium mb-2">进入对话页面</h3>
+                    <p class="text-sm text-white/60">点击导航栏的"对话"按钮，进入主要对话界面。</p>
+                </div>
+                <div class="feature-card bg-white/5 p-6 rounded-xl border border-white/10">
+                    <div class="text-2xl mb-4 text-indigo-400">02</div>
+                    <h3 class="font-medium mb-2">开始新对话</h3>
+                    <p class="text-sm text-white/60">点击左侧边栏的"新对话"按钮，开始一次全新的对话。</p>
+                </div>
+                <div class="feature-card bg-white/5 p-6 rounded-xl border border-white/10">
+                    <div class="text-2xl mb-4 text-indigo-400">03</div>
+                    <h3 class="font-medium mb-2">选择情绪标签</h3>
+                    <p class="text-sm text-white/60">选择当前的情绪标签，帮助系统更好地理解你的状态。</p>
+                </div>
+                <div class="feature-card bg-white/5 p-6 rounded-xl border border-white/10">
+                    <div class="text-2xl mb-4 text-indigo-400">04</div>
+                    <h3 class="font-medium mb-2">开始交流</h3>
+                    <p class="text-sm text-white/60">输入你想说的话，与AI展开深入对话。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心功能 -->
+        <section class="guide-section mb-16">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i class="fas fa-star text-indigo-400"></i>
+                核心功能
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 智能对话 -->
+                <div class="bg-white/5 rounded-xl p-8 border border-white/10">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-indigo-500/10 rounded-lg">
+                            <i class="fas fa-comments text-2xl text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-medium mb-4">智能对话</h3>
+                            <ul class="space-y-3 text-white/70">
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-green-400 mt-1"></i>
+                                    <span>支持连续对话，AI会记住上下文</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-green-400 mt-1"></i>
+                                    <span>自动保存对话历史，方便回顾</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-green-400 mt-1"></i>
+                                    <span>提供个性化的建议和指导</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 情绪跟踪 -->
+                <div class="bg-white/5 rounded-xl p-8 border border-white/10">
+                    <div class="flex items-start gap-4">
+                        <div class="p-3 bg-indigo-500/10 rounded-lg">
+                            <i class="fas fa-heart text-2xl text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-medium mb-4">情绪跟踪</h3>
+                            <ul class="space-y-3 text-white/70">
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-green-400 mt-1"></i>
+                                    <span>五种基本情绪标签：开心、难过、生气、平静、焦虑</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-green-400 mt-1"></i>
+                                    <span>可视化情绪变化趋势图表</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fas fa-check text-green-400 mt-1"></i>
+                                    <span>智能情绪分析和建议</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 详细使用步骤 -->
+        <section class="guide-section mb-16">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i class="fas fa-list-ol text-indigo-400"></i>
+                详细使用步骤
+            </h2>
+            <div class="space-y-8">
+                <!-- 开始对话 -->
+                <div class="bg-white/5 rounded-xl p-8 border border-white/10">
+                    <h3 class="text-xl font-medium mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">1</span>
+                        开始对话
+                    </h3>
+                    <div class="space-y-4 text-white/70">
+                        <p>1. 点击左侧边栏顶部的"新对话"按钮</p>
+                        <p>2. 系统会自动保存之前的对话记录</p>
+                        <p>3. 你将看到一条欢迎消息，表示新对话已经开始</p>
+                    </div>
+                </div>
+                <!-- 使用情绪标签 -->
+                <div class="bg-white/5 rounded-xl p-8 border border-white/10">
+                    <h3 class="text-xl font-medium mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">2</span>
+                        使用情绪标签
+                    </h3>
+                    <div class="space-y-4 text-white/70">
+                        <p>1. 在输入框上方找到情绪标签按钮</p>
+                        <p>2. 点击最符合当前心情的标签</p>
+                        <p>3. 标签会自动添加到输入框中</p>
+                        <div class="flex gap-2 mt-4">
+                            <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-sm">😊 开心</span>
+                            <span class="px-3 py-1 rounded-full bg-pink-500/20 text-sm">😢 难过</span>
+                            <span class="px-3 py-1 rounded-full bg-orange-500/20 text-sm">😠 生气</span>
+                            <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-sm">😌 平静</span>
+                            <span class="px-3 py-1 rounded-full bg-gray-500/20 text-sm">😰 焦虑</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 输入内容 -->
+                <div class="bg-white/5 rounded-xl p-8 border border-white/10">
+                    <h3 class="text-xl font-medium mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">3</span>
+                        输入内容
+                    </h3>
+                    <div class="space-y-4 text-white/70">
+                        <p>1. 在输入框中详细描述你的想法或问题</p>
+                        <p>2. 输入框会自动调整高度</p>
+                        <p>3. 点击发送按钮或按回车键发送消息</p>
+                        <div class="bg-black/20 p-4 rounded-lg mt-4">
+                            <p class="text-sm italic">示例：[😊 开心] 今天完成了一个重要的项目，感觉很有成就感，但同时也有点担心下一个挑战。</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 查看分析 -->
+                <div class="bg-white/5 rounded-xl p-8 border border-white/10">
+                    <h3 class="text-xl font-medium mb-4 flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-sm">4</span>
+                        查看分析
+                    </h3>
+                    <div class="space-y-4 text-white/70">
+                        <p>1. 点击右侧面板的"开始分析"按钮</p>
+                        <p>2. 查看情绪变化趋势图表</p>
+                        <p>3. 阅读情绪分布统计</p>
+                        <p>4. 获取AI的个性化洞察和建议</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 使用技巧 -->
+        <section class="guide-section mb-16">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i class="fas fa-lightbulb text-indigo-400"></i>
+                使用技巧
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+                    <h3 class="font-medium mb-3 flex items-center gap-2">
+                        <i class="fas fa-pen text-indigo-400"></i>
+                        描述要具体
+                    </h3>
+                    <p class="text-sm text-white/60">提供具体的背景和细节，能帮助AI更好地理解你的情况，给出更有针对性的建议。</p>
+                </div>
+                <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+                    <h3 class="font-medium mb-3 flex items-center gap-2">
+                        <i class="fas fa-tags text-indigo-400"></i>
+                        善用情绪标签
+                    </h3>
+                    <p class="text-sm text-white/60">每次对话都使用情绪标签，这样系统能更准确地追踪你的情绪变化，提供更有价值的分析。</p>
+                </div>
+                <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+                    <h3 class="font-medium mb-3 flex items-center gap-2">
+                        <i class="fas fa-history text-indigo-400"></i>
+                        定期回顾
+                    </h3>
+                    <p class="text-sm text-white/60">使用搜索功能查找特定主题的历史对话，回顾过去的建议和进展，这对个人成长很有帮助。</p>
+                </div>
+                <div class="bg-white/5 p-6 rounded-xl border border-white/10">
+                    <h3 class="font-medium mb-3 flex items-center gap-2">
+                        <i class="fas fa-clock text-indigo-400"></i>
+                        保持连续性
+                    </h3>
+                    <p class="text-sm text-white/60">定期进行对话和情绪记录，这样能获得更准确的情绪趋势分析和更有针对性的建议。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 注意事项 -->
+        <section class="guide-section">
+            <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <i class="fas fa-exclamation-circle text-indigo-400"></i>
+                注意事项
+            </h2>
+            <div class="bg-red-500/10 border border-red-500/20 p-6 rounded-xl">
+                <h3 class="font-medium mb-4 text-red-400">重要提醒</h3>
+                <ul class="space-y-3 text-white/70">
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-exclamation-triangle text-red-400 mt-1"></i>
+                        <p>AI Life Coach 提供的建议仅供参考，不能替代专业的医疗或心理咨询。如果你正在经历严重的心理健康问题，请及时寻求专业帮助。</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-shield-alt text-red-400 mt-1"></i>
+                        <p>所有对话数据都保存在本地，确保你的隐私安全。</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-database text-red-400 mt-1"></i>
+                        <p>系统最多保存50条历史对话记录，超出部分会自动删除最早的记录。</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-sync text-red-400 mt-1"></i>
+                        <p>如遇到技术问题，可以尝试刷新页面或清除浏览器缓存。</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.guide-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -4,57 +4,636 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Life Coach - 个人成长对话</title>
-    <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Markdown解析 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/lib/highlight.min.js"></script>
+    <style>
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+
+        .bg-gradient-overlay {
+            background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.05), transparent, rgba(244, 63, 94, 0.05));
+            filter: blur(24px);
+        }
+
+        .elegant-shape {
+            position: absolute;
+            border-radius: 9999px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.08), transparent);
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .floating {
+            animation: floating 12s infinite ease-in-out;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(var(--rotate, 0deg)); }
+            50% { transform: translateY(15px) rotate(calc(var(--rotate, 0deg) + 5deg)); }
+        }
+
+        .message {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: message-fade-in 0.5s forwards;
+        }
+
+        @keyframes message-fade-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-message .message-content {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(244, 63, 94, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(244, 63, 94, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .typing-indicator span {
+            animation: blink 1s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .send-button {
+            background: linear-gradient(to right, #6366f1, #f43f5e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .send-button:hover::before {
+            left: 100%;
+        }
+
+        #userInput {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        #userInput:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav a {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #6366f1, #f43f5e);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav a:hover::after,
+        .nav a.active::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .sidebar {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-history-item {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .chat-history-item:hover, .chat-history-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid #6366f1;
+        }
+
+        .emotion-badge {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .emotion-badge.happy {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .emotion-badge.sad {
+            background: rgba(244, 63, 94, 0.2);
+        }
+
+        .emotion-badge.neutral {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .emotion-badge.excited {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .emotion-badge.calm {
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        .analysis-panel {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .emotion-chart-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+        }
+
+        .new-chat-btn {
+            background: linear-gradient(to right, #6366f1, #f43f5e);
+            transition: all 0.3s ease;
+        }
+
+        .new-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .export-btn {
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 情绪标签样式 */
+        .emotion-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .emotion-tag.happy {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .emotion-tag.sad {
+            background: rgba(244, 63, 94, 0.2);
+        }
+
+        .emotion-tag.neutral {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .emotion-tag.excited {
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .emotion-tag.calm {
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        /* Markdown 内容样式 */
+        .markdown-content {
+            line-height: 1.6;
+        }
+        
+        .markdown-content h1 {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 1em 0 0.5em;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .markdown-content h2 {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 1em 0 0.5em;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .markdown-content h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 1em 0 0.5em;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .markdown-content p {
+            margin: 0.5em 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .markdown-content ul, .markdown-content ol {
+            margin: 0.5em 0;
+            padding-left: 1.5em;
+        }
+        
+        .markdown-content li {
+            margin: 0.3em 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .markdown-content code:not(pre code) {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 0.2em;
+            font-size: 0.9em;
+            color: #e2e8f0;
+        }
+        
+        .markdown-content pre {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5em;
+            padding: 1em;
+            margin: 1em 0;
+            overflow-x: auto;
+        }
+        
+        .markdown-content pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.9em;
+            color: #e2e8f0;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 4px solid rgba(255, 255, 255, 0.2);
+            padding-left: 1em;
+            margin: 1em 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+        
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        
+        .markdown-content th, .markdown-content td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5em;
+            text-align: left;
+        }
+        
+        .markdown-content th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: bold;
+        }
+        
+        .markdown-content hr {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 1.5em 0;
+        }
+        
+        .markdown-content img {
+            max-width: 100%;
+            border-radius: 0.5em;
+            margin: 1em 0;
+        }
+        
+        .markdown-content a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+        
+        .markdown-content a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-[#030303] text-white min-h-screen flex flex-col">
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 bg-gradient-overlay pointer-events-none"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="elegant-shape floating" style="width: 600px; height: 140px; transform: rotate(12deg); left: -5%; top: 20%; background: linear-gradient(to right, rgba(99, 102, 241, 0.15), transparent); --rotate: 12deg;"></div>
+        <div class="elegant-shape floating" style="width: 300px; height: 80px; transform: rotate(-8deg); right: 10%; top: 40%; background: linear-gradient(to right, rgba(244, 63, 94, 0.15), transparent); --rotate: -8deg;"></div>
+    </div>
+
     <!-- 页眉区域 -->
-    <header class="header">
-        <h1>AI Life Coach</h1>
-        <p class="subtitle">你的个人成长伙伴</p>
-        <nav class="nav">
-            <ul>
-                <li><a href="#" class="active">对话</a></li>
-                <li><a href="#">使用说明</a></li>
-            </ul>
-        </nav>
+    <header class="header fixed top-0 w-full z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-brain text-2xl text-white/60"></i>
+                    <h1 class="text-xl font-bold">AI Life Coach</h1>
+                </div>
+                <nav class="nav flex items-center gap-4">
+                    <ul class="flex gap-6">
+                        <li><a href="home.html" class="text-white/80 hover:text-white transition-colors">首页</a></li>
+                        <li><a href="index.html" class="text-white active">对话</a></li>
+                        <li><a href="guide.html" class="text-white/80 hover:text-white transition-colors">使用指南</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </header>
 
-    <!-- 主要对话区域 -->
-    <main class="chat-container">
-        <!-- 消息展示区 -->
-        <section class="messages" id="messageArea">
-            <!-- 欢迎消息 -->
-            <div class="message ai-message">
-                <div class="message-content">
-                    <p>你好！我是你的AI Life Coach。让我们开始对话，探讨你的个人成长之路吧！</p>
+    <!-- 主要内容区域 - 三栏布局 -->
+    <div class="flex-1 flex pt-16">
+        <!-- 左侧边栏 - 对话历史 -->
+        <aside class="sidebar w-64 flex-shrink-0 h-screen overflow-y-auto">
+            <div class="p-4">
+                <button id="newChatBtn" class="new-chat-btn w-full py-2 px-4 rounded-lg text-white font-medium mb-6 flex items-center justify-center gap-2">
+                    <i class="fas fa-plus"></i>
+                    <span>新对话</span>
+                </button>
+                
+                <div class="mb-4">
+                    <div class="relative">
+                        <input type="text" id="searchChat" placeholder="搜索对话..." class="w-full bg-black/20 border border-white/10 rounded-lg py-2 px-4 pl-10 text-sm">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40"></i>
+                    </div>
+                </div>
+                
+                <div class="text-xs text-white/40 uppercase font-semibold mb-2 mt-6">对话历史</div>
+                
+                <div id="chatHistoryList" class="space-y-1">
+                    <!-- 对话历史项将通过JavaScript动态添加 -->
                 </div>
             </div>
-        </section>
+        </aside>
+        
+        <!-- 中间主要区域 - 聊天界面 -->
+        <main class="flex-1 flex flex-col h-screen">
+            <div class="flex-1 overflow-y-auto p-6" id="messageArea">
+            <!-- 欢迎消息 -->
+                <div class="message ai-message mb-6">
+                    <div class="message-content p-4 rounded-lg max-w-[80%]">
+                        <p class="text-white/90">你好！我是你的AI Life Coach。让我们开始对话，探讨你的个人成长之路吧！</p>
+                    </div>
+                </div>
+            </div>
 
         <!-- 输入区域 -->
-        <section class="input-area">
-            <form id="chatForm" class="chat-form">
+            <div class="border-t border-white/10 p-4 bg-black/30">
+                <div class="flex gap-2 mb-3">
+                    <div class="emotion-tag happy">
+                        <span>😊 开心</span>
+                    </div>
+                    <div class="emotion-tag sad">
+                        <span>😢 难过</span>
+                    </div>
+                    <div class="emotion-tag excited">
+                        <span>😃 生气</span>
+                    </div>
+                    <div class="emotion-tag calm">
+                        <span>😌 平静</span>
+                    </div>
+                    <div class="emotion-tag neutral">
+                        <span>😐 焦虑</span>
+                    </div>
+                </div>
+                <form id="chatForm" class="flex gap-4 items-end">
                 <textarea 
                     id="userInput" 
                     placeholder="输入你想说的话..."
                     rows="3"
+                        class="flex-1 rounded-lg p-4 resize-none"
                     required
                 ></textarea>
-                <button type="submit" class="send-button">
+                    <button type="submit" class="send-button px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-105 h-[52px] flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i>
                     发送
                 </button>
             </form>
-        </section>
+            </div>
     </main>
 
-    <!-- 页脚区域 -->
-    <footer class="footer">
-        <p>© 2024 AI Life Coach. 基于火山方舟DeepSeek R1 API开发</p>
-        <p><small>注意：这是一个AI助手，仅供参考。如有重要决定，请咨询专业人士。</small></p>
-    </footer>
+        <!-- 右侧边栏 - 情绪分析 -->
+        <aside class="analysis-panel w-80 flex-shrink-0 h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold">对话分析</h3>
+                    <button id="startAnalysisBtn" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-white/80 py-1 px-3 rounded-lg text-sm transition-all">
+                        开始分析
+                    </button>
+                </div>
+                
+                <!-- 情绪趋势 -->
+                <div class="mb-8">
+                    <h4 class="text-sm text-white/60 mb-4">情绪趋势</h4>
+                    <div class="p-4 bg-black/20 rounded-lg border border-white/5">
+                        <div class="emotion-chart-container">
+                            <canvas id="emotionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 情绪分析 -->
+                <div class="mb-8">
+                    <h4 class="text-sm text-white/60 mb-4">情绪分析</h4>
+                    <div id="emotionAnalysis" class="p-4 bg-black/20 rounded-lg border border-white/5">
+                        <p class="text-white/60 text-sm">点击"开始分析"按钮开始分析</p>
+                    </div>
+                </div>
+                
+                <!-- AI洞察 -->
+                <div>
+                    <h4 class="text-sm text-white/60 mb-4">AI洞察</h4>
+                    <div id="aiInsights" class="p-4 bg-black/20 rounded-lg border border-white/5">
+                        <p class="text-white/60 text-sm">点击"开始分析"按钮开始分析</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
-    <!-- 引入JavaScript文件 -->
     <script src="public/js/chat.js"></script>
+    <script>
+        // GSAP动画
+        gsap.from('.header', {
+            y: -100,
+            opacity: 0,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.sidebar', {
+            x: -50,
+            opacity: 0,
+            duration: 1,
+            delay: 0.2,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.analysis-panel', {
+            x: 50,
+            opacity: 0,
+            duration: 1,
+            delay: 0.2,
+            ease: 'power3.out'
+        });
+
+        gsap.from('#messageArea', {
+            opacity: 0,
+            y: 30,
+            duration: 1,
+            delay: 0.4,
+            ease: 'power3.out'
+        });
+
+        // 初始化情绪图表
+        const ctx = document.getElementById('emotionChart').getContext('2d');
+        const emotionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '情绪变化',
+                    data: [],
+                    borderColor: 'rgba(99, 102, 241, 0.8)',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.5)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.5)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // 情绪标签点击事件
+        document.querySelectorAll('.emotion-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const emotion = this.textContent.trim();
+                const userInput = document.getElementById('userInput');
+                userInput.value += `[${emotion}] `;
+                userInput.focus();
+            });
+        });
+
+        // 新对话按钮点击事件
+        document.getElementById('newChatBtn').addEventListener('click', function() {
+            if (confirm('确定要开始新对话吗？当前对话将被保存。')) {
+                // 保存当前对话
+                saveChatHistory();
+                // 清空消息区域，只保留欢迎消息
+                const messageArea = document.getElementById('messageArea');
+                messageArea.innerHTML = `
+                    <div class="message ai-message mb-6">
+                        <div class="message-content p-4 rounded-lg max-w-[80%]">
+                            <p class="text-white/90">你好！我是你的AI Life Coach。让我们开始对话，探讨你的个人成长之路吧！</p>
+                        </div>
+                    </div>
+                `;
+                // 重置聊天历史
+                chatHistory = [];
+                // 更新对话历史列表
+                updateChatHistoryList();
+            }
+        });
+
+        // 开始分析按钮点击事件
+        document.getElementById('startAnalysisBtn').addEventListener('click', function() {
+            analyzeEmotions();
+        });
+
+        // 自动调整输入框高度
+        const textarea = document.getElementById('userInput');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // 消息滚动到底部
+        const messageArea = document.getElementById('messageArea');
+        function scrollToBottom() {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
+
+        // 监听新消息添加
+        const observer = new MutationObserver(scrollToBottom);
+        observer.observe(messageArea, { childList: true });
+
+        // 加载保存的对话历史
+        loadChatHistories();
+        updateChatHistoryList();
+    </script>
 </body>
 </html>

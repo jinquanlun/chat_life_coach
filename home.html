@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Life Coach - 你的个人成长伙伴</title>
+    <script src="https://unpkg.com/framer-motion/dist/framer-motion.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        
+        .elegant-shape {
+            position: absolute;
+            border-radius: 9999px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.08), transparent);
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .elegant-shape::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2), transparent 70%);
+        }
+
+        .bg-gradient-overlay {
+            background: linear-gradient(to bottom right, rgba(99, 102, 241, 0.05), transparent, rgba(244, 63, 94, 0.05));
+            filter: blur(24px);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #818cf8, #ffffff, #fb7185);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .button-gradient {
+            background: linear-gradient(to right, #6366f1, #f43f5e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .button-gradient:hover::before {
+            left: 100%;
+        }
+
+        .floating {
+            animation: floating 12s infinite ease-in-out;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotate(var(--rotate, 0deg)); }
+            50% { transform: translateY(15px) rotate(calc(var(--rotate, 0deg) + 5deg)); }
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .glow {
+            animation: glow 2s infinite ease-in-out;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .mouse-parallax {
+            transition: transform 0.2s ease-out;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            border-radius: 50%;
+            background: white;
+        }
+
+        @keyframes particle-animation {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--tx, 100px), var(--ty, -100px)); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-[#030303] text-white min-h-screen">
+    <div class="relative min-h-screen w-full flex items-center justify-center overflow-hidden" id="parallax-container">
+        <!-- 背景渐变 -->
+        <div class="absolute inset-0 bg-gradient-overlay"></div>
+
+        <!-- 装饰形状 -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="elegant-shape floating mouse-parallax" style="width: 600px; height: 140px; transform: rotate(12deg); left: -5%; top: 20%; background: linear-gradient(to right, rgba(99, 102, 241, 0.15), transparent); --rotate: 12deg;"></div>
+            <div class="elegant-shape floating mouse-parallax" style="width: 500px; height: 120px; transform: rotate(-15deg); right: 0%; top: 75%; background: linear-gradient(to right, rgba(244, 63, 94, 0.15), transparent); --rotate: -15deg;"></div>
+            <div class="elegant-shape floating mouse-parallax" style="width: 300px; height: 80px; transform: rotate(-8deg); left: 10%; bottom: 10%; background: linear-gradient(to right, rgba(139, 92, 246, 0.15), transparent); --rotate: -8deg;"></div>
+            <div class="elegant-shape floating mouse-parallax" style="width: 200px; height: 60px; transform: rotate(20deg); right: 20%; top: 15%; background: linear-gradient(to right, rgba(245, 158, 11, 0.15), transparent); --rotate: 20deg;"></div>
+            <div class="elegant-shape floating mouse-parallax" style="width: 150px; height: 40px; transform: rotate(-25deg); left: 25%; top: 10%; background: linear-gradient(to right, rgba(6, 182, 212, 0.15), transparent); --rotate: -25deg;"></div>
+        </div>
+
+        <!-- 主要内容 -->
+        <div class="relative z-10 container mx-auto px-4 md:px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <!-- Logo徽章 -->
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] mb-8 md:mb-12 fade-up glow">
+                    <i class="fas fa-brain text-xl text-white/60"></i>
+                    <span class="text-sm text-white/60 tracking-wide">AI Life Coach</span>
+                </div>
+
+                <!-- 标题 -->
+                <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 md:mb-8 tracking-tight">
+                    <span class="block text-white/90 fade-up">探索成长</span>
+                    <span class="block font-pacifico text-gradient fade-up">遇见更好的自己</span>
+                </h1>
+
+                <!-- 描述 -->
+                <p class="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4 fade-up">
+                    通过AI驱动的个性化对话，帮助你解决生活困惑，实现个人成长，开启人生新篇章。
+                </p>
+
+                <!-- 按钮 -->
+                <a href="index.html" class="inline-flex fade-up">
+                    <button class="px-6 py-3 rounded-full button-gradient text-white font-medium shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-105" id="cta-button">
+                        开始对话
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <!-- 渐变遮罩 -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none"></div>
+    </div>
+
+    <nav class="nav flex items-center gap-4">
+        <ul class="flex gap-6">
+            <li><a href="home.html" class="text-white active">首页</a></li>
+            <li><a href="index.html" class="text-white/80 hover:text-white transition-colors">对话</a></li>
+            <li><a href="guide.html" class="text-white/80 hover:text-white transition-colors">使用指南</a></li>
+        </ul>
+    </nav>
+
+    <script>
+        // 入场动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.fade-up');
+            elements.forEach((el, i) => {
+                setTimeout(() => {
+                    el.style.transition = 'all 1s cubic-bezier(0.23, 0.86, 0.39, 0.96)';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 500 + i * 200);
+            });
+
+            // 鼠标视差效果
+            const container = document.getElementById('parallax-container');
+            const parallaxElements = document.querySelectorAll('.mouse-parallax');
+
+            container.addEventListener('mousemove', (e) => {
+                const xPos = (e.clientX / window.innerWidth - 0.5) * 2;
+                const yPos = (e.clientY / window.innerHeight - 0.5) * 2;
+
+                parallaxElements.forEach(el => {
+                    const speed = 20;
+                    const x = xPos * speed;
+                    const y = yPos * speed;
+                    el.style.transform = `translate(${x}px, ${y}px) rotate(var(--rotate))`;
+                });
+            });
+
+            // 按钮点击效果
+            const button = document.getElementById('cta-button');
+            button.addEventListener('click', createParticles);
+        });
+
+        // 粒子效果
+        function createParticles(e) {
+            const button = e.target;
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = '4px';
+                particle.style.height = '4px';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+                particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+                particle.style.animation = 'particle-animation 1s forwards';
+                
+                button.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // GSAP动画增强
+        gsap.to('.elegant-shape', {
+            scale: 1.1,
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut",
+            stagger: {
+                each: 0.2,
+                from: "random"
+            }
+        });
+    </script>
+</body>
+</html>
+
+

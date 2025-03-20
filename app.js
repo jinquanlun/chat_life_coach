@@ -4,7 +4,6 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 
 const app = express();
-const port = 3000;
 
 // 启用CORS和JSON解析
 app.use(cors());
@@ -107,8 +106,52 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-// 启动服务器
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`服务器运行在 http://localhost:${port}`);
+// 错误处理中间件
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({
+        error: true,
+        message: '服务器内部错误，请稍后重试',
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
 });
+
+// 优化服务器启动
+const startServer = async (initialPort = 3000) => {
+    let port = initialPort;
+    const maxRetries = 10; // 最多尝试10个端口
+
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            await new Promise((resolve, reject) => {
+                const server = app.listen(port, () => {
+                    console.log(`服务器启动成功，访问 http://localhost:${port}`);
+                    resolve();
+                });
+
+                server.on('error', (err) => {
+                    if (err.code === 'EADDRINUSE') {
+                        console.log(`端口 ${port} 已被占用，尝试端口 ${port + 1}`);
+                        port++;
+                        server.close();
+                        reject(err);
+                    } else {
+                        console.error('服务器启动失败:', err);
+                        reject(err);
+                    }
+                });
+            });
+            // 如果成功启动，跳出循环
+            break;
+        } catch (error) {
+            if (i === maxRetries - 1) {
+                console.error(`无法找到可用端口，请手动关闭占用端口的程序`);
+                process.exit(1);
+            }
+            // 如果不是最后一次尝试，继续循环
+            continue;
+        }
+    }
+};
+
+startServer(process.env.PORT || 3000);

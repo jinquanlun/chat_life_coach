@@ -31,3 +31,30 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Coverage directory
+coverage/
+
+# Local development
+*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Cache directories
+.cache/
+.npm/
+.eslintcache
+
+# Misc
+*.bak
+*.tmp
+*.temp
+.vercel
